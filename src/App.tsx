@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import PersonalInfo from "./components/PersonalInfo";
 import { useMultiStepForm } from "./hooks/useMultiStepForm";
+import SelectPlan from "./components/SelectPlan";
 
 type FormData = {
   name: string;
@@ -26,10 +27,16 @@ export function App() {
     steps,
   } = useMultiStepForm([
     <PersonalInfo />,
-    <div>2</div>,
+    <SelectPlan />,
     <div>3</div>,
     <div>4</div>,
   ]);
+
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!isLastStep) return next();
+    alert("Succeful complete");
+  }
 
   return (
     <div className="bg-LightBlue h-screen flex flex-col justify-center">
@@ -56,16 +63,38 @@ export function App() {
       </ul>
 
       {/* Form */}
-      <div className="absolute top-20 bg-[#fff] m-3 py-10 px-3 text-2xl font-bold rounded-xl">
-        <PersonalInfo />
-      </div>
+      <form
+        onSubmit={onSubmit}
+        className="absolute top-20 bg-[#fff] m-3 py-10 px-3 text-2xl font-bold rounded-xl"
+      >
+        <div>{step}</div>
+      </form>
 
       {/* NEXT AND BACK BUTTONS */}
 
-      <div className="absolute bottom-0 w-full flex justify-between p-5 bg-[#fff]">
-        <button className="font-semibold text-CoolGray">Go Back</button>
-        <button className="bg-MarineBlue text-[#fff] font-semibold py-2 px-4 rounded">
-          Next Step
+      <div
+        className={`absolute bottom-0 w-full flex ${
+          isFirstStep ? "justify-end" : "justify-between"
+        } p-5 bg-[#fff]`}
+      >
+        {!isFirstStep && (
+          <button
+            type="button"
+            onClick={back}
+            className="font-semibold text-CoolGray"
+          >
+            Go Back
+          </button>
+        )}
+
+        <button
+          type="button"
+          onClick={next}
+          className={`${
+            isLastStep ? "bg-PurplishBlue" : "bg-MarineBlue"
+          } text-[#fff] font-semibold py-2 px-4 rounded flex`}
+        >
+          {isLastStep ? "Confirm" : "Next Step"}
         </button>
       </div>
     </div>

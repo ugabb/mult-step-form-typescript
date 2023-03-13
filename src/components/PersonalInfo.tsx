@@ -1,9 +1,7 @@
-import React from "react";
+
 import { FormWrapper } from "./FormWrapper";
 
-type Props = {};
-
-const PersonalInfo = (props: Props) => {
+const PersonalInfo = () => {
   return (
     <FormWrapper
       title="Personal Info"
