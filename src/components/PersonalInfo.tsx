@@ -1,7 +1,17 @@
-
 import { FormWrapper } from "./FormWrapper";
 
-const PersonalInfo = () => {
+type UserData = {
+  name: string;
+  email: string;
+  phone: string;
+};
+
+// this type will add the UserData type + PersonalInfoProps type(updateFields propriety)
+type PersonalInfoProps = UserData & {
+  updateFields: (fields: Partial<UserData>) => void;
+};
+
+const PersonalInfo = ({ name, email, phone, updateFields }: PersonalInfoProps) => {
   return (
     <FormWrapper
       title="Personal Info"
@@ -13,6 +23,8 @@ const PersonalInfo = () => {
         placeholder="e.g Stephen King"
         type="text"
         required
+        value={name}
+        onChange={(e) => updateFields({name: e.target.value})}
       />
 
       <label className="text-base font-semibold text-MarineBlue ">
@@ -23,6 +35,8 @@ const PersonalInfo = () => {
         placeholder="e.g. stephenking@lorem.com"
         type="email"
         required
+        value={email}
+        onChange={(e) => updateFields({email: e.target.value})}
       />
 
       <label className="text-base font-semibold text-MarineBlue ">
@@ -33,6 +47,8 @@ const PersonalInfo = () => {
         placeholder="e.g. +1 234 567 890"
         type="text"
         required
+        value={phone}
+        onChange={(e) => updateFields({phone: e.target.value})}
       />
     </FormWrapper>
   );

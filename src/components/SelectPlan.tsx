@@ -1,7 +1,17 @@
+import {useState} from 'react'
+
 import { FormWrapper } from "./FormWrapper";
+import {BsToggleOn,BsToggleOff} from 'react-icons/bs'
 import Plan from "./Plan";
 
 const SelectPlan = () => {
+  // Yearly by default (false)
+  const [plan, setPlan] = useState<boolean>(false) 
+
+  function togglePlan(){
+    setPlan(prev => !prev)
+  }
+
   return (
     <FormWrapper
       title="Select your plan"
@@ -17,19 +27,19 @@ const SelectPlan = () => {
         <Plan
           icon="./icon-advanced.svg"
           months="2"
-          name="Arcade"
+          name="Advanced"
           priceYearly={120}
         />
         <Plan
           icon="./icon-pro.svg"
           months="2"
-          name="Arcade"
+          name="Pro"
           priceYearly={150}
         />
       </div>
-      <div className="flex gap-3 mt-5 items-center justify-center">
+      <div className="flex gap-5 mt-5 items-center justify-center">
         <p className="text-base text-MarineBlue">Monthly</p>
-        <button className="text-base">toggle</button>
+        <button type='button' onClick={togglePlan} className="text-base"><BsToggleOn className={`text-3xl text-MarineBlue  ${plan ? "rotate-180" : ""}`} /></button>
         <p className="text-base text-CoolGray">Yearly</p>
       </div>
     </FormWrapper>

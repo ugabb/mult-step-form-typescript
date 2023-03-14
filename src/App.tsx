@@ -1,21 +1,43 @@
 import { FormEvent, useState } from "react";
+
+import { NavLink } from "react-router-dom";
+
+//Components
 import PersonalInfo from "./components/PersonalInfo";
 import { useMultiStepForm } from "./hooks/useMultiStepForm";
 import SelectPlan from "./components/SelectPlan";
+import PickAdd from "./components/PickAdd";
+import FinishinpUp from "./components/FinishinpUp";
+import ConfirmPage from "./components/ConfirmPage";
+
+type Plan = {
+  name: string;
+  type: string;
+};
 
 type FormData = {
   name: string;
   email: string;
   phone: string;
+  plan: Plan;
 };
 
 const initialData: FormData = {
   name: "",
   email: "",
   phone: "",
+  plan: { name: "", type: "" },
 };
 
 export function App() {
+  const [data, setData] = useState(initialData);
+
+  function updateFields(fields: Partial<FormData>){
+    setData(prev => {
+      return {...prev, ...fields}
+    })
+  }
+
   const {
     back,
     currentStepIndex,
@@ -26,10 +48,10 @@ export function App() {
     step,
     steps,
   } = useMultiStepForm([
-    <PersonalInfo />,
+    <PersonalInfo name={data.name} email={data.email} phone={data.phone} updateFields={updateFields} />,
     <SelectPlan />,
-    <div>3</div>,
-    <div>4</div>,
+    <PickAdd />,
+    <FinishinpUp />,
   ]);
 
   function onSubmit(e: FormEvent) {
@@ -39,36 +61,59 @@ export function App() {
   }
 
   return (
-    <div className="bg-LightBlue h-screen flex flex-col justify-center">
+    <form onSubmit={onSubmit} className="bg-LightBlue h-screen flex flex-col justify-center">
       <img
-        className="absolute top-0 z-0"
+        className="absolute top-0 z-0 w-full"
         src="./bg-sidebar-mobile.svg"
         alt=""
       />
 
       {/* Navigation page */}
       <ul className="absolute top-5 flex justify-center items-center gap-5 w-full mx-auto">
-        <li className="text-2xl text-[#fff] text-center font-bold border border-[#fff] w-10 h-10 rounded-full">
+        <li
+          className={`text-2xl text-center font-bold border border-[#fff] w-10 h-10 rounded-full ${
+            currentStepIndex === 0
+              ? "bg-LightBlue text-MarineBlue"
+              : "transparent text-[#fff]"
+          }`}
+        >
           1
         </li>
-        <li className="text-2xl text-[#fff] text-center font-bold border border-[#fff] w-10 h-10 rounded-full">
+        <li
+          className={`text-2xl text-center font-bold border border-[#fff] w-10 h-10 rounded-full ${
+            currentStepIndex === 1
+              ? "bg-LightBlue text-MarineBlue"
+              : "transparent text-[#fff]"
+          }`}
+        >
           2
         </li>
-        <li className="text-2xl text-[#fff] text-center font-bold border border-[#fff] w-10 h-10 rounded-full">
+        <li
+          className={`text-2xl text-center font-bold border border-[#fff] w-10 h-10 rounded-full ${
+            currentStepIndex === 2
+              ? "bg-LightBlue text-MarineBlue"
+              : "transparent text-[#fff]"
+          }`}
+        >
           3
         </li>
-        <li className="text-2xl text-[#fff] text-center font-bold border border-[#fff] w-10 h-10 rounded-full">
+        <li
+          className={`text-2xl text-center font-bold border border-[#fff] w-10 h-10 rounded-full ${
+            currentStepIndex === 3
+              ? "bg-LightBlue text-MarineBlue"
+              : "transparent text-[#fff]"
+          }`}
+        >
           4
         </li>
       </ul>
 
       {/* Form */}
-      <form
-        onSubmit={onSubmit}
-        className="absolute top-20 bg-[#fff] m-3 py-10 px-3 text-2xl font-bold rounded-xl"
+      <div
+        className="absolute top-20 bg-[#fff] m-3 py-10 px-3 text-2xl font-bold rounded-xl shadow-xl"
       >
         <div>{step}</div>
-      </form>
+      </div>
 
       {/* NEXT AND BACK BUTTONS */}
 
@@ -87,17 +132,27 @@ export function App() {
           </button>
         )}
 
-        <button
-          type="button"
-          onClick={next}
-          className={`${
-            isLastStep ? "bg-PurplishBlue" : "bg-MarineBlue"
-          } text-[#fff] font-semibold py-2 px-4 rounded flex`}
-        >
-          {isLastStep ? "Confirm" : "Next Step"}
-        </button>
+        {isLastStep ? (
+          <button
+            type="button"
+            className={`${
+              isLastStep ? "bg-PurplishBlue" : "bg-MarineBlue"
+            } text-[#fff] font-semibold py-2 px-4 rounded flex`}
+          >
+            Confirm
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className={`${
+              isLastStep ? "bg-PurplishBlue" : "bg-MarineBlue"
+            } text-[#fff] font-semibold py-2 px-4 rounded flex`}
+          >
+            Next Step
+          </button>
+        )}
       </div>
-    </div>
+    </form>
   );
 }
 
