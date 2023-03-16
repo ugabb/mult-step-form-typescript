@@ -10,32 +10,30 @@ import PickAdd from "./components/PickAdd";
 import FinishinpUp from "./components/FinishinpUp";
 import ConfirmPage from "./components/ConfirmPage";
 
-type Plan = {
-  name: string;
-  type: string;
-};
 
-type FormData = {
+
+export type FormData = {
   name: string;
   email: string;
   phone: string;
-  plan: Plan;
+  plano: "Arcade" | "Advanced" | "Pro" ;
 };
 
 const initialData: FormData = {
   name: "",
   email: "",
   phone: "",
-  plan: { name: "", type: "" },
+  plano:'Arcade',
 };
 
 export function App() {
   const [data, setData] = useState(initialData);
+  console.log(data)
 
-  function updateFields(fields: Partial<FormData>){
-    setData(prev => {
-      return {...prev, ...fields}
-    })
+  function updateFields(fields: Partial<FormData>) {
+    setData((prev) => {
+      return { ...prev, ...fields };
+    });
   }
 
   const {
@@ -48,7 +46,12 @@ export function App() {
     step,
     steps,
   } = useMultiStepForm([
-    <PersonalInfo name={data.name} email={data.email} phone={data.phone} updateFields={updateFields} />,
+    <PersonalInfo
+      name={data.name}
+      email={data.email}
+      phone={data.phone}
+      updateFields={updateFields}
+    />,
     <SelectPlan />,
     <PickAdd />,
     <FinishinpUp />,
@@ -61,10 +64,19 @@ export function App() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="bg-LightBlue h-screen flex flex-col justify-center">
+    <form
+      onSubmit={onSubmit}
+      className="bg-LightBlue h-screen flex flex-col lg:flex-row justify-center lg:gap-5 lg:bg-[#fff]"
+    >
       <img
-        className="absolute top-0 z-0 w-full"
+        className="lg:hidden absolute top-0 z-0 w-full"
         src="./bg-sidebar-mobile.svg"
+        alt=""
+      />
+
+      <img
+        className="hidden lg:block lg:m-6"
+        src="./bg-sidebar-desktop.svg"
         alt=""
       />
 
@@ -108,19 +120,52 @@ export function App() {
         </li>
       </ul>
 
-      {/* Form */}
-      <div
-        className="absolute top-20 bg-[#fff] m-3 py-10 px-3 text-2xl font-bold rounded-xl shadow-xl"
-      >
+      {/* Content*/}
+      <div className="absolute top-20 left-0 right-0 bg-[#fff] m-3 py-10 px-3 text-2xl font-bold rounded-xl shadow-xl lg:static ">
         <div>{step}</div>
+
+        {/* NEXT AND BACK BUTTONS Desktop Version */}
+        {/* <div
+          className={`relative w-full flex ${
+            isFirstStep ? "justify-end" : "justify-between"
+          } p-5 bg-[#fff]`}
+        >
+          <button
+            type="button"
+            onClick={back}
+            className="font-semibold text-CoolGray absolute"
+          >
+            Go Back
+          </button>
+
+          {isLastStep ? (
+            <button
+              type="button"
+              className={`${
+                isLastStep ? "bg-PurplishBlue" : "bg-MarineBlue"
+              } text-[#fff] font-semibold py-2 px-4 rounded flex`}
+            >
+              Confirm
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className={`${
+                isLastStep ? "bg-PurplishBlue" : "bg-MarineBlue"
+              } text-[#fff] font-semibold py-2 px-4 rounded flex`}
+            >
+              Next Step
+            </button>
+          )}
+        </div> */}
+
       </div>
 
-      {/* NEXT AND BACK BUTTONS */}
-
+      {/* NEXT AND BACK BUTTONS Mobile Version */}
       <div
         className={`absolute bottom-0 w-full flex ${
           isFirstStep ? "justify-end" : "justify-between"
-        } p-5 bg-[#fff]`}
+        } p-5 bg-[#fff] lg:hidden`}
       >
         {!isFirstStep && (
           <button
